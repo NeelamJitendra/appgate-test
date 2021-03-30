@@ -11,6 +11,7 @@ import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import RefreshIcon from '@material-ui/icons/Cached';
 import Brightness1 from '@material-ui/icons/Brightness1';
+import LogOut from '@material-ui/icons/ExitToApp';
 
 const useStyles = makeStyles({
   table: {
@@ -43,7 +44,7 @@ export default function Dashboard({ token }) {
     refresh();
     setInterval(function () {
       refresh()
-    }, 1000);
+    }, 60000);
   }
 
   const refresh = () => {
