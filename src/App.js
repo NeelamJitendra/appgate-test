@@ -6,16 +6,15 @@ import useToken from './useToken';
 
 function App() {
   const { token, setToken } = useToken();
-  const username= token === null ? '' : token.user.name;
-  console.log(token)
-  if(!token) {
+  const username = token === undefined ? '' : token.user.name;
+  if (!token) {
     return <Login setToken={setToken} />
   }
 
   return (
     <div className="wrapper">
       <h1>Welome {username}</h1>
-        <Dashboard />
+      <Dashboard token={token.token} />
     </div>
   );
 }

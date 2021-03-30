@@ -13,6 +13,7 @@ import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import HeaderImage from './HeaderImage.jpg';
 import { v4 as uuidv4 } from 'uuid';
+import PropTypes from 'prop-types';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -26,40 +27,40 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 async function loginUser(credentials) {
-    return fetch('/admin/login', {
-      method: 'POST',
-      headers: new Headers({
-        'Accept': 'application/vnd.appgate.peer-v14+json',
-        'Content-Type': 'application/json'
-      }),
-      body: JSON.stringify(credentials)
+  return fetch('/admin/login', {
+    method: 'POST',
+    headers: new Headers({
+      'Accept': 'application/vnd.appgate.peer-v14+json',
+      'Content-Type': 'application/json'
+    }),
+    body: JSON.stringify(credentials)
+  })
+    .then(response => {
+      if (response.ok) {
+        return response.json()
+      } else {
+        response.text().then(text => {
+
+          const error = JSON.parse(text);
+          throw alert(error.message)
+        })
+      }
     })
-      .then(response=>{
-        if(response.ok){
-           return response.json()
-        }else{ 
-          response.text().then(text =>{
-            
-            const error = JSON.parse(text);
-            throw alert(error.message)
-          })
-        }
-      })
-      .catch(err => {
-        alert(err);
-      });
-   }
-   
+    .catch(err => {
+      alert(err);
+    });
+}
+
 export default function Login({ setToken }) {
   const [username, setUserName] = useState();
   const [password, setPassword] = useState();
   const [rememberMe, setRememberMe] = useState(false);
   const [identityProvider, setIdentityProvider] = useState("Company LDAP");
   const classes = useStyles();
-    
+
   const handleSubmit = async e => {
     e.preventDefault();
-    try{
+    try {
       const token = await loginUser({
         "providerName": identityProvider,
         "username": username,
@@ -69,59 +70,59 @@ export default function Login({ setToken }) {
       });
       setToken(token);
     }
-    catch(error){
+    catch (error) {
       console.error(error)
     }
   }
-  return(
+  return (
     <div className="bg-img">
-            <form className="form-wrapper" onSubmit={handleSubmit}>
-              <img src={HeaderImage} alt={'HeaderImage'} />
-              <div>The credentials for this Test Drive have been sent to the e-mail address you registered with.
-                The email is from "AppGate SDP Test Drive &lt;noreply@appgate.com&gt;". 
-                <br/><br/>
+      <form className="form-wrapper" onSubmit={handleSubmit}>
+        <img src={HeaderImage} alt={'HeaderImage'} />
+        <div>The credentials for this Test Drive have been sent to the e-mail address you registered with.
+        The email is from "AppGate SDP Test Drive &lt;noreply@appgate.com&gt;".
+                <br /><br />
                 Use "Company LDAP" Identity Provider for signing in.
               </div>
 
-              <br/><br/>
-              
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="identity-provider">Identity Provider</InputLabel>
-                <Select
-                  labelId="identity-provider"
-                  id="identity-provider"
-                  onChange={e => setIdentityProvider(e.target.id)}
-                  value={identityProvider}
-                  label="identity-provider">
-                  <MenuItem value={"Company LDAP"}>Company LDAP</MenuItem>
-                  <MenuItem value={"local"}>Local</MenuItem>
-                </Select>
-              </FormControl>
+        <br /><br />
 
-              <TextField className={classes.formControl} color="primary" type="text" id="username" onChange={e => setUserName(e.target.value)} label="Username" variant="outlined" />
+        <FormControl variant="outlined" className={classes.formControl}>
+          <InputLabel id="identity-provider">Identity Provider</InputLabel>
+          <Select
+            labelId="identity-provider"
+            id="identity-provider"
+            onChange={e => setIdentityProvider(e.target.id)}
+            value={identityProvider}
+            label="identity-provider">
+            <MenuItem value={"Company LDAP"}>Company LDAP</MenuItem>
+            <MenuItem value={"local"}>Local</MenuItem>
+          </Select>
+        </FormControl>
 
-              <TextField className={classes.formControl} color="primary" type="password" id="password" onChange={e => setPassword(e.target.value)} label="password" variant="outlined" />
-              
-              <FormControlLabel
-                className={classes.formControl}
-                control={
-                  <Checkbox
-                    onChange={e => setRememberMe(e.target.checked)}
-                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                    checkedIcon={<CheckBoxIcon fontSize="small" />}
-                    name="keepLoggedIn"
-                    color="primary"
-                  />
-                }
-                label="Keep me signed in until token expires"
-              />
+        <TextField className={classes.formControl} color="primary" type="text" id="username" onChange={e => setUserName(e.target.value)} label="Username" variant="outlined" />
 
-              <Button type="submit" variant="outlined" color="primary">Sign in</Button>
-            </form>
-          </div>
+        <TextField className={classes.formControl} color="primary" type="password" id="password" onChange={e => setPassword(e.target.value)} label="password" variant="outlined" />
+
+        <FormControlLabel
+          className={classes.formControl}
+          control={
+            <Checkbox
+              onChange={e => setRememberMe(e.target.checked)}
+              icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+              checkedIcon={<CheckBoxIcon fontSize="small" />}
+              name="keepLoggedIn"
+              color="primary"
+            />
+          }
+          label="Keep me signed in until token expires"
+        />
+
+        <Button type="submit" variant="outlined" color="primary">Sign in</Button>
+      </form>
+    </div>
   )
 }
 
 Login.propTypes = {
-    //setToken: PropTypes.func.isRequired
-  }
+  setToken: PropTypes.func.isRequired
+}
