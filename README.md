@@ -56,11 +56,11 @@ ReactJs is an open-source, front end, JavaScript library for building user inter
 
 ## Login page
 
-![](Images/LogInPage.PNG)
+![LogIn page](./src/Images/LogInPage.PNG)
 
 ## Dashboard page
 
-![](Images/DashboardPage.PNG)
+![Dashboard page](./src/Images/DashboardPage.PNG)
 
 ## Contributing
 
