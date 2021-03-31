@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Login.css';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
@@ -25,6 +25,17 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
   },
 }));
+
+async function fetchIdProviders() {
+  return fetch('/admin/identity-providers/names', {
+    method: 'GET',
+    headers: new Headers({
+      'Accept': 'application/vnd.appgate.peer-v14+json',
+      'Content-Type': 'application/json'
+    }),
+  }
+  ).then(response => response.json());
+}
 
 async function loginUser(credentials) {
   return fetch('/admin/login', {
@@ -55,14 +66,25 @@ export default function Login({ setToken }) {
   const [username, setUserName] = useState();
   const [password, setPassword] = useState();
   const [rememberMe, setRememberMe] = useState(true);
-  const [identityProvider, setIdentityProvider] = useState("Company LDAP");
+  const [identityProvider, setIdentityProvider] = useState();
+  const [selectedIP, setSelectedIP] = useState();
   const classes = useStyles();
+
+  useEffect(async () => {
+    const idProviders = await fetchIdProviders();
+    setIdentityProvider(idProviders);
+    idProviders.data.forEach(e => {
+      if (e.default) {
+        setSelectedIP(e.name)
+      }
+    })
+  }, []);
 
   const handleSubmit = async e => {
     e.preventDefault();
     try {
       const token = await loginUser({
-        "providerName": identityProvider,
+        "providerName": selectedIP,
         "username": username,
         "password": password,
         "deviceId": uuidv4(),
@@ -74,29 +96,29 @@ export default function Login({ setToken }) {
       console.error(error)
     }
   }
+  if (!selectedIP) {
+    return ''
+  }
 
   return (
     <div className="bg-img">
       <form className="form-wrapper" onSubmit={handleSubmit}>
         <img src={HeaderImage} alt={'HeaderImage'} />
-        <div>The credentials for this Test Drive have been sent to the e-mail address you registered with.
-        The email is from "AppGate SDP Test Drive &lt;noreply@appgate.com&gt;".
-                <br /><br />
-                Use "Company LDAP" Identity Provider for signing in.
-              </div>
+        <div>{identityProvider.bannerMessage}</div>
 
-        <br /><br />
+        <br />
 
         <FormControl variant="outlined" className={classes.formControl}>
           <InputLabel id="identity-provider">Identity Provider</InputLabel>
           <Select
             labelId="identity-provider"
             id="identity-provider"
-            onChange={e => setIdentityProvider(e.target.id)}
-            value={identityProvider}
+            onChange={e => setSelectedIP(e.target.value)}
+            value={selectedIP}
             label="identity-provider">
-            <MenuItem value={"Company LDAP"}>Company LDAP</MenuItem>
-            <MenuItem value={"local"}>Local</MenuItem>
+            {identityProvider.data.map((row) => (
+              <MenuItem value={row.name}>{row.displayName}</MenuItem>
+            ))}
           </Select>
         </FormControl>
 
