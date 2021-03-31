@@ -31,7 +31,7 @@ export default function useToken() {
   };
   const [token, setToken] = useState(getToken());
 
-  const saveToken = userToken => {
+  const saveToken = (userToken, rememberMe) => {
     if (userToken !== undefined) {
       const tokenTime = userToken.expires.split('.')[0]
       if (tokenTime <= dateAndTime) {
@@ -39,7 +39,12 @@ export default function useToken() {
         localStorage.clear();
       }
       else {
-        localStorage.setItem('token', JSON.stringify(userToken));
+        if (rememberMe) {
+          localStorage.setItem('token', JSON.stringify(userToken));
+        }
+        else {
+          sessionStorage.setItem('token', JSON.stringify(userToken));
+        }
         setToken(userToken);
       }
     }

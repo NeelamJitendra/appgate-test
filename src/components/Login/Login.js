@@ -54,7 +54,7 @@ async function loginUser(credentials) {
 export default function Login({ setToken }) {
   const [username, setUserName] = useState();
   const [password, setPassword] = useState();
-  const [rememberMe, setRememberMe] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
   const [identityProvider, setIdentityProvider] = useState("Company LDAP");
   const classes = useStyles();
 
@@ -68,12 +68,13 @@ export default function Login({ setToken }) {
         "deviceId": uuidv4(),
         "samlResponse": "string"
       });
-      setToken(token);
+      setToken(token, rememberMe);
     }
     catch (error) {
       console.error(error)
     }
   }
+
   return (
     <div className="bg-img">
       <form className="form-wrapper" onSubmit={handleSubmit}>
@@ -107,6 +108,7 @@ export default function Login({ setToken }) {
           className={classes.formControl}
           control={
             <Checkbox
+              checked={rememberMe}
               onChange={e => setRememberMe(e.target.checked)}
               icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
               checkedIcon={<CheckBoxIcon fontSize="small" />}
