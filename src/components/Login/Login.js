@@ -11,7 +11,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
-import HeaderImage from './HeaderImage.jpg';
+import HeaderImage from '../../Images/HeaderImage.jpg';
 import { v4 as uuidv4 } from 'uuid';
 import PropTypes from 'prop-types';
 

@@ -21,8 +21,13 @@ function App() {
   return (
     <div className="wrapper">
       <div className="heading">
-      <h1>Welome {username}</h1>
-      <IconButton title="Logout user" component="span" onClick={() => {logOutUser()}}>
+      <h1>Weclome {username}</h1>
+      <IconButton 
+        title="Logout user" 
+        component="span" 
+        disableRipple= {true}
+        disableFocusRipple= {true}
+        onClick={() => {logOutUser()}}>
         <LogOut />
       </IconButton>
       </div>

@@ -5,20 +5,19 @@
     font-size: 0.4cm;
   }
   
-.bg-img {
-    /* The image used */
-    background-image: url("BackGround.png");
-    height: 100%; 
-    width: 100%;
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-.form-wrapper {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    background-color: white;
-    margin: 20px;
-    max-width: 300px;
-    padding: 16px;
-  }
+  .bg-img {
+      background-image: url("../../Images/BackGround.png");
+      height: 100%; 
+      width: 100%;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+  .form-wrapper {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      background-color: white;
+      margin: 20px;
+      max-width: 300px;
+      padding: 16px;
+    }
